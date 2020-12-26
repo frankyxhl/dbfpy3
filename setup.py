@@ -30,19 +30,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    description="Port to Python 3 and released at PyPi by Frank Xu.
-dbfpy is a python-only module for reading and writing DBF-files.
-It was created by Jeff Kunce and then modified by Hans Fiby
-and Yaroslav Samchuk.  Dbfpy was ported to Python 3.x by James
-Douglass.
-dbfpy can read and write simple DBF-files.  The `DBF-format
-<http://www.clicketyclick.dk/databases/xbase/format/>`_
-was developed about 30 years ago and was used by a number
-of simple database applications (dBase, Foxpro, Clipper, ...).
-The basic datatypes numbers, short text, and dates are available.
-Many different extensions have been used; dbfpy can read and write
-only simple DBF-files.
-    ",
+    description="Port to Python 3 and released at PyPi by Frank Xu.\n dbfpy is a python-only module for reading and writing DBF-files.\n It was created by Jeff Kunce and then modified by Hans Fiby\n and Yaroslav Samchuk.  Dbfpy was ported to Python 3.x by James Douglass. ",
     install_requires=requirements,
     license="MIT license",
     long_description=readme + '\n\n' + history,
