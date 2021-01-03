@@ -182,8 +182,8 @@ class DbfField(object):
         if not isinstance(name, bytes):
             raise TypeError('name must be bytes')
 
-        if len(name) > 10:
-            raise ValueError("field name '%s' must less than 10 bytes" % name)
+        if len(name) > 20:
+            raise ValueError("field name '%s' must less than 20 bytes" % name)
 
         self._name = name.upper()
 
