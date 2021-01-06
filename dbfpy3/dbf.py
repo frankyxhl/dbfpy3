@@ -132,7 +132,11 @@ class Dbf(object):
             self.memo = None
         self.header.set_memo_file(self.memo)
 
-    ## properties
+    def __enter__(self):
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.close()
 
     @property
     def closed(self):
