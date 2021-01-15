@@ -40,6 +40,7 @@ from .header import DbfHeader
 from . import memo
 from .record import DbfRecord
 from . import utils
+from .code_page import CodePage
 
 __all__ = ["Dbf"]
 
