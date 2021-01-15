@@ -79,15 +79,12 @@ class CodePage:
             # default use system encoding
             self.encoding = locale.getpreferredencoding()
         elif code == "GBK":
-            self.encoding = 0x7a
+            self.code_page = 0x7a
         elif isinstance(code, int):
             self.code_page = code
         elif isinstance(code, str):
             self.encoding = code
         else:
-            print("Could not find encodings. Here is list")
-            for code, (code_page, name) in code_pages:
-                print(hex(code), code_page, name)
             raise TypeError('unsupported code page type ({0})'.format(type(code)))
 
     @property
@@ -100,12 +97,15 @@ class CodePage:
 
     @encoding.setter
     def encoding(self, target_encoding):
-        for code_page, encoding in code_pages.items():
+        for code_page, (encoding, name) in code_pages.items():
             if encoding == target_encoding:
                 self.code_page = code_page
                 break
         else:
             self.code_page = 0
+            print("Could not find encodings. Here is list:")
+            for code, (code_page, name) in code_pages:
+                print(hex(code), code_page, name)
 
     def __str__(self):
         return self.encoding
