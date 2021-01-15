@@ -40,7 +40,6 @@ from .header import DbfHeader
 from . import memo
 from .record import DbfRecord
 from . import utils
-from .code_page import CodePage
 
 __all__ = ["Dbf"]
 
@@ -108,8 +107,7 @@ class Dbf(object):
             raise TypeError('Unsupported file type ({})'.format(type(file)))
 
         if new:
-            _code_page = CodePage(code_page)
-            self.header = DbfHeader(_code_page)
+            self.header = DbfHeader(code_page)
         else:
             self.header = DbfHeader.parse(self.stream)
 
