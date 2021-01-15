@@ -59,7 +59,7 @@ class Dbf(object):
     ## initialization and creation helpers
 
     def __init__(self, file, read_only=False, new=False, ignore_errors=False,
-                 memo_file=None, code_page=None):
+                 memo_file=None, code_page=0):
         """Initialize instance.
 
         Arguments:
@@ -107,7 +107,8 @@ class Dbf(object):
             raise TypeError('Unsupported file type ({})'.format(type(file)))
 
         if new:
-            self.header = DbfHeader()
+            _code_page = CodePage(code_page)
+            self.header = DbfHeader(_code_page)
         else:
             self.header = DbfHeader.parse(self.stream)
 
@@ -124,8 +125,6 @@ class Dbf(object):
             self.memo = None
         self.header.set_memo_file(self.memo)
 
-        if code_page:
-            self.header.code_page = CodePage(code_page)
 
     def __enter__(self):
         return self
