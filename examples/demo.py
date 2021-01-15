@@ -1,9 +1,7 @@
-import env
 from datetime import date
 from dbfpy import dbf
 
 # create DBF
-
 db = dbf.Dbf('new.dbf', new=True)
 db.header.code_page = 0x78
 db.add_field(
@@ -20,11 +18,11 @@ for (name, surname, birthdate) in (
         ('毛', '仁愛', (1984, 7, 8)),
         ('吳', '開深', (1984, 7, 8)),
 ):
-    rec = db.new_record()
+    rec = db.new()
     rec['NAME'] = name
     rec['SURNAME'] = surname
     rec['BIRTHDATE'] = birthdate
-    db.write_record(rec)
+    db.write(rec)
 
 print(db, '\n\n')
 db.close()
@@ -34,11 +32,11 @@ db.close()
 print("Windows console can't print unicode characters, "
       'so this may raise error')
 
-db = dbf.Dbf('table.dbf')
-print(db, '\n')
-for record in db:
-    print(record, '\n')
-    record[b'INT'] = 100
-    record[b'DATE'] = date.today()
-    db.write_record(record)
-db.close()
+# Use `with` statement
+with dbf.Dbf('table.dbf') as db:
+    print(db, '\n')
+    for record in db:
+        print(record, '\n')
+        record[b'INT'] = 100
+        record[b'DATE'] = date.today()
+        db.write(record)

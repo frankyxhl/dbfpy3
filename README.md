@@ -1,10 +1,13 @@
 Python 3 modules for accessing .dbf files
 ------------------------------------------
 
+Forked from https://github.com/steelywing/dbfpy.
+
 ### Features
 
 * Support FoxPro
 * Support memo
+* Support `with` statement 
 * Code page
 
 ### TODO
@@ -14,12 +17,11 @@ Python 3 modules for accessing .dbf files
 
 ### Install
 
-1. Download [master.zip](https://github.com/SteelyWing/dbfpy/archive/master.zip) and extract.
-2. Run `python setup.py`
+Run `pip install dbfpy3`
 
 ### Demo
 
-See [demo.py](https://github.com/SteelyWing/dbfpy/blob/master/examples/demo.py)
+See [demo.py](https://github.com/frankyxhl/dbfpy/blob/master/examples/demo.py)
 
 ---
 
@@ -30,11 +32,12 @@ See [demo.py](https://github.com/SteelyWing/dbfpy/blob/master/examples/demo.py)
 ### NO WARRANTIES WHATSOEVER
 
 ---
+### Authors
 
-Jeff Kunce <kuncej@mail.conservation.state.mo.us>
+Jeff Kunce <kuncej@mail.conservation.state.mo.us> http://starship.python.net/crew/jjkunce/
 
-http://starship.python.net/crew/jjkunce/
+Hans Fiby <hans@fiby.at> http://www.fiby.at
 
-Hans Fiby <hans@fiby.at>
+Steely Wing https://github.com/steelywing/
 
-http://www.fiby.at
+Frank Xu https://github.com/frankyxhl/

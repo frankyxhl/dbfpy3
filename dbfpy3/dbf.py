@@ -59,7 +59,7 @@ class Dbf(object):
     ## initialization and creation helpers
 
     def __init__(self, file, read_only=False, new=False, ignore_errors=False,
-                 memo_file=None):
+                 memo_file=None, code_page=None):
         """Initialize instance.
 
         Arguments:
@@ -124,6 +124,9 @@ class Dbf(object):
             self.memo = None
         self.header.set_memo_file(self.memo)
 
+        if code_page:
+            self.header.code_page = CodePage(code_page)
+
     def __enter__(self):
         return self
 
@@ -187,11 +190,11 @@ class Dbf(object):
         if hasattr(self.memo, 'flush'):
             self.memo.flush()
 
-    def new_record(self):
+    def new(self):
         """Return new record, which belong to this table."""
         return DbfRecord(self.header)
 
-    def write_record(self, record):
+    def write(self, record):
         """Write data to the dbf stream.
 
         If ``record.index`` is None, this record will be appended to the
@@ -212,7 +215,7 @@ class Dbf(object):
     def append(self, record):
         """Append ``record`` to the database."""
         record.index = None
-        self.write_record(record)
+        self.write(record)
 
     def add_field(self, *defs):
         """Add field definitions.
@@ -252,7 +255,7 @@ class Dbf(object):
         assert isinstance(record, DbfRecord)
 
         record.index = index
-        self.write_record(record)
+        self.write(record)
 
     #def __del__(self):
         #    """Flush stream upon deletion of the object."""

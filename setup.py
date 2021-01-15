@@ -43,6 +43,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/frankyxhl/dbfpy3',
-    version='3.3.0',
+    version='4.0.0',
     zip_safe=False,
 )
