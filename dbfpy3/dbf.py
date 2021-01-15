@@ -1,7 +1,5 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 """DBF accessing helpers.
-
-FIXME: more documentation needed
 
 Examples:
 
@@ -38,18 +36,12 @@ Examples:
 
 """
 from io import IOBase
-
-__version__ = "$Revision: 1.9 $"[11:-2]
-__date__ = "$Date: 2012/12/17 19:16:57 $"[7:-2]
-__author__ = "Jeff Kunce <kuncej@mail.conservation.state.mo.us>"
-
-__all__ = ["Dbf"]
-
 from .header import DbfHeader
 from . import memo
 from .record import DbfRecord
 from . import utils
 
+__all__ = ["Dbf"]
 
 class Dbf(object):
     """DBF accessor.
@@ -265,5 +257,3 @@ class Dbf(object):
     #def __del__(self):
         #    """Flush stream upon deletion of the object."""
         #    self.flush()
-
-# vim: set et sw=4 sts=4 :

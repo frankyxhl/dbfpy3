@@ -4,9 +4,6 @@ TODO:
   - test encoding (windows console can't print utf-8 characters)
 """
 
-__version__ = "$Revision: 1.7 $"[11:-2]
-__date__ = "$Date: 2010/12/14 11:07:45 $"[7:-2]
-
 __all__ = ["DbfHeader"]
 
 import io
@@ -177,7 +174,6 @@ class DbfHeader():
             code_page=code_page,
         )
 
-    ## properties
     @property
     def has_memo(self):
         """True if at least one field is a Memo field"""
@@ -391,5 +387,3 @@ class DbfHeader():
             return self.fields[key]
 
         raise TypeError('Unsupported key type ({})'.format(type(key)))
-
-# vim: et sts=4 sw=4 :
