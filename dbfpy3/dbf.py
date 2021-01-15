@@ -107,7 +107,7 @@ class Dbf(object):
             raise TypeError('Unsupported file type ({})'.format(type(file)))
 
         if new:
-            self.header = DbfHeader(code_page)
+            self.header = DbfHeader(code_page=code_page)
         else:
             self.header = DbfHeader.parse(self.stream)
 
