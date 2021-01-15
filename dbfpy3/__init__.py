@@ -3,5 +3,5 @@ from . import dbf, fields, record, header, utils, code_page
 
 __author__ = """Frank Xu"""
 __email__ = 'franky.xhl@gmail.com'
-__version__ = '4.1.3'
+__version__ = '4.1.4'
 __all__ = ['dbf']

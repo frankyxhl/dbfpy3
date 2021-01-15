@@ -78,12 +78,12 @@ class CodePage:
         if code is None:
             # default use system encoding
             self.encoding = locale.getpreferredencoding()
+        elif code == "GBK":
+            self.encoding = 0x7a
         elif isinstance(code, int):
             self.code_page = code
         elif isinstance(code, str):
             self.encoding = code
-        elif code == "GBK":
-            self.encoding = 0x7a
         else:
             print("Could not find encodings. Here is list")
             for code, (code_page, name) in code_pages:
