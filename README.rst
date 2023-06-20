@@ -38,3 +38,7 @@ http://starship.python.net/crew/jjkunce/
 Hans Fiby <hans@fiby.at>
 
 http://www.fiby.at
+
+Frank Xu <https://github.com/frankyxhl/dbfpy3?
+
+Zdeněk Böhm <https://github.com/zbohm>
