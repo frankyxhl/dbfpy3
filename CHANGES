@@ -1,6 +1,11 @@
 Version 3 (26-Dec-2021)
 ---------------------------
 
+Fixes:
+  - Fix encode in DbfMemoField.
+  - Fix new MemoFile header.
+  - Fix tests.
+
 Released at PyPi.
 
 Version 2.2.5 (16-sep-2010)
