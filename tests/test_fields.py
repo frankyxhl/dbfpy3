@@ -2,8 +2,7 @@ __author__ = 'Wing'
 
 import unittest
 import struct
-import env
-from dbfpy import fields
+from dbfpy3 import fields
 
 
 # Implement DbfField
@@ -33,9 +32,9 @@ class FieldsTest(unittest.TestCase):
 
     def test_field_name_max_length(self):
         dbf_field = _DbfField(b'NAME')
-        # max length 10 bytes
-        with self.assertRaises(ValueError):
-            dbf_field.name = b'N' * 11
+        # max length 20 bytes
+        with self.assertRaisesRegex(ValueError, "field name 'b'NNNNNNNNNNNNNNNNNNNNN'' must less than 20 bytes"):
+            dbf_field.name = b'N' * 21
 
     def test_numeric_field(self):
         field = fields.DbfNumericField(b'NUM', 10, decimal_count=2)
