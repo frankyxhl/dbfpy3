@@ -1,4 +1,3 @@
-* Python FX bin version:
 * Python version:
 * Operating System:
 
