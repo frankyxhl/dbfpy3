@@ -1,5 +1,8 @@
+import os
 from datetime import date
-from dbfpy import dbf
+from pathlib import Path
+
+from dbfpy3 import dbf
 
 # create DBF
 db = dbf.Dbf('new.dbf', new=True)
@@ -32,8 +35,11 @@ db.close()
 print("Windows console can't print unicode characters, "
       'so this may raise error')
 
+path_resolver = Path(__file__).resolve()
+filepath = os.path.join(path_resolver.parent, 'table.DBF')
+
 # Use `with` statement
-with dbf.Dbf('table.dbf') as db:
+with dbf.Dbf(filepath) as db:
     print(db, '\n')
     for record in db:
         print(record, '\n')
