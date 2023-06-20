@@ -416,7 +416,9 @@ class DbfMemoField(DbfGeneralField):
 
         Note: this is an internal method.
         """
-        return super().encode(value.encode(encoding))
+        if isinstance(value, str):
+            value = value.encode(encoding)
+        return super().encode(value)
 
 
 class DbfPictureField(DbfGeneralField):

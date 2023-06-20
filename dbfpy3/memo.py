@@ -86,10 +86,10 @@ class MemoFile(object):
                 self.blocksize = 512 * blocksize
             else:
                 self.blocksize = blocksize
-            self.tail = 512 / self.blocksize
+            self.tail = 512 // self.blocksize
             self.stream.write(
                 struct.pack(">LHH", self.tail, 0, self.blocksize)
-                + "\0" * 8 + "\x03" + "\0" * 495)
+                + b"\0" * 8 + b"\x03" + b"\0" * 495)
         else:
             (self.tail, _zero, self.blocksize) = struct.unpack(">LHH",
                 self.stream.read(8))

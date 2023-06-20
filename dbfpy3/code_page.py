@@ -104,7 +104,7 @@ class CodePage:
         else:
             self.code_page = 0
             print("Could not find encodings. Here is list:")
-            for code, (code_page, name) in code_pages:
+            for code, (code_page, name) in code_pages.items():
                 print(hex(code), code_page, name)
 
     def __str__(self):

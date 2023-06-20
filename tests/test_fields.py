@@ -1,9 +1,10 @@
 __author__ = 'Wing'
 
-import unittest
 import struct
-import env
-from dbfpy import fields
+import unittest
+from io import BytesIO
+
+from dbfpy3 import fields
 
 
 # Implement DbfField
@@ -14,12 +15,6 @@ class _DbfField(fields.DbfField):
 
 
 class FieldsTest(unittest.TestCase):
-
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
 
     def test_field_name(self):
         dbf_field = _DbfField(b'NAME')
@@ -33,9 +28,9 @@ class FieldsTest(unittest.TestCase):
 
     def test_field_name_max_length(self):
         dbf_field = _DbfField(b'NAME')
-        # max length 10 bytes
-        with self.assertRaises(ValueError):
-            dbf_field.name = b'N' * 11
+        # max length 20 bytes
+        with self.assertRaisesRegex(ValueError, "field name 'b'NNNNNNNNNNNNNNNNNNNNN'' must less than 20 bytes"):
+            dbf_field.name = b'N' * 21
 
     def test_numeric_field(self):
         field = fields.DbfNumericField(b'NUM', 10, decimal_count=2)
@@ -179,6 +174,20 @@ class FieldsTest(unittest.TestCase):
         field_string.pop()
         with self.assertRaises(ValueError):
             fields.DbfFields.parse(bytes(field_string))
+
+
+class DbfMemoFieldTest(unittest.TestCase):
+
+    def test_encode_str(self):
+        field = fields.DbfMemoField(b'NAME')
+        field.file = BytesIO()
+        self.assertEqual(field.encode('test'), b'\x04\x00\x00\x00')
+
+    def test_encode_bytes(self):
+        field = fields.DbfMemoField(b'NAME')
+        field.file = BytesIO()
+        self.assertEqual(field.encode(b'test'), b'\x04\x00\x00\x00')
+
 
 if __name__ == '__main__':
     unittest.main()

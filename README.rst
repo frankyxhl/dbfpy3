@@ -16,7 +16,7 @@ Port to Python 3 and released at PyPi by Frank Xu.
 
 ### Install
 
-Run `python -m pip install dbfpy3`
+Run `pip install dbfpy3`
 
 
 ---
