@@ -4,9 +4,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.x'
     - name: Install dependencies Makefile
@@ -14,8 +14,8 @@ jobs:
         python -m pip install --upgrade pip wheel
         python setup.py sdist
         python setup.py bdist_wheel
-    - name: Deploy to PyPi
-      uses: pypa/gh-action-pypi-publish@v1.4.1
+    - name: Publish package distributions to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
