@@ -1,7 +1,9 @@
 __author__ = 'Wing'
 
-import unittest
 import struct
+import unittest
+from io import BytesIO
+
 from dbfpy3 import fields
 
 
@@ -13,12 +15,6 @@ class _DbfField(fields.DbfField):
 
 
 class FieldsTest(unittest.TestCase):
-
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
 
     def test_field_name(self):
         dbf_field = _DbfField(b'NAME')
@@ -178,6 +174,20 @@ class FieldsTest(unittest.TestCase):
         field_string.pop()
         with self.assertRaises(ValueError):
             fields.DbfFields.parse(bytes(field_string))
+
+
+class DbfMemoFieldTest(unittest.TestCase):
+
+    def test_encode_str(self):
+        field = fields.DbfMemoField(b'NAME')
+        field.file = BytesIO()
+        self.assertEqual(field.encode('test'), b'\x04\x00\x00\x00')
+
+    def test_encode_bytes(self):
+        field = fields.DbfMemoField(b'NAME')
+        field.file = BytesIO()
+        self.assertEqual(field.encode(b'test'), b'\x04\x00\x00\x00')
+
 
 if __name__ == '__main__':
     unittest.main()
