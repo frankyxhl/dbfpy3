@@ -34,7 +34,7 @@ setup(
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
     ],
-    description="Port to Python 3 and released at PyPi by Frank Xu.\n dbfpy is a python-only module for reading and writing DBF-files.\n It was created by Jeff Kunce and then modified by Hans Fiby\n and Yaroslav Samchuk.  Dbfpy was ported to Python 3.x by James Douglass. ",
+    description="Port to Python 3. Dbfpy is a python-only module for reading and writing DBF-files.\n It was created by Jeff Kunce and then modified by Hans Fiby\n and Yaroslav Samchuk.  Dbfpy was ported to Python 3.x by James Douglass and released at PyPi by Frank X and released at PyPi by Frank Xuu.  ",
     install_requires=requirements,
     license="MIT license",
     long_description=readme + '\n\n' + history,
@@ -46,6 +46,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/frankyxhl/dbfpy3',
-    version='4.1.5',
+    version='4.2.0',
     zip_safe=False,
 )
