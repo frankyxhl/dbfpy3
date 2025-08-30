@@ -2,21 +2,23 @@ on:
   push:
     branches:
       - main
+      - main-clean
 name: Deploy to PyPi
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.x'
-    - name: Install dependencies Makefile
+        python-version: '3.11'  # Use stable version instead of '3.x' to avoid Python 3.13 issues
+    - name: Install build dependencies
       run: |
-        python -m pip install --upgrade pip wheel
-        python setup.py sdist
-        python setup.py bdist_wheel
+        python -m pip install --upgrade pip wheel setuptools build
+    - name: Build package distributions
+      run: |
+        python -m build
     - name: Publish package distributions to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
