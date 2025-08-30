@@ -47,6 +47,11 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
+# BDD test reports and artifacts
+reports/
+*.bdd.log
+*_bdd_tests_*/
+
 # Translations
 *.mo
 *.pot

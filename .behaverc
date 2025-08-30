@@ -1,0 +1,58 @@
+# Behave configuration file for dbfpy3 BDD tests
+
+[behave]
+# Output format options: plain, pretty, json, junit, progress
+format = pretty
+
+# Show colored output
+color = yes
+
+# Logging level: CRITICAL, ERROR, WARNING, INFO, DEBUG
+logging_level = INFO
+
+# Show timings for scenarios and steps
+show_timings = yes
+
+# Stop on first failure (useful for debugging)
+# stop = yes
+
+# Show skipped scenarios
+show_skipped = yes
+
+# Define default tags to run (can be overridden from command line)
+# default_tags = -wip,-manual
+
+# Include source location in output
+show_source = yes
+
+# Capture stdout during scenario execution
+stdout_capture = no
+
+# Capture stderr during scenario execution  
+stderr_capture = no
+
+# Log capture (captures log output during test execution)
+log_capture = no
+
+# Define paths
+paths = features
+
+# Define default userdata values
+default_format = pretty
+default_tags = ~@manual
+junit = no
+junit_directory = reports
+
+# Additional configuration for different environments
+[behave.formatters]
+json.pretty = yes
+junit.pretty = yes
+
+[behave.userdata]
+# Custom userdata can be accessed in environment.py and step definitions
+# Example: behave -D verbose=true -D strict=false
+verbose = false
+strict = true
+performance = false
+wip = false
+log_level = INFO

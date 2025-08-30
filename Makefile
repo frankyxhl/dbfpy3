@@ -46,15 +46,67 @@ clean-test: ## remove test and coverage artifacts
 	rm -f .coverage
 	rm -fr htmlcov/
 	rm -fr .pytest_cache
+	rm -fr reports/
+	find . -path "*/features/steps/__pycache__" -exec rm -fr {} +
+	find . -name "*.bdd.log" -exec rm -f {} +
 
 lint: ## check style with flake8
 	flake8 dbfpy3 tests
 
-test: ## run tests quickly with the default Python
+test: ## run all tests (traditional, TDD, and BDD)
+	python -m unittest discover tests -v && behave
+
+test-quick: ## run quick smoke tests (fast subset)
+	python -m unittest discover tests -p "test_[!_]*" -v && behave --tags=@smoke
+
+test-traditional: ## run traditional unit tests only
 	python setup.py test
 
 test-all: ## run tests on every Python version with tox
 	tox
+
+tdd: ## run TDD tests (unit tests)
+	python -m unittest discover tests -p "test_*_tdd.py" -v
+
+tdd-field: ## run TDD field parsing tests
+	python -m unittest tests.test_field_parsing_tdd -v
+
+tdd-header: ## run TDD header validation tests
+	python -m unittest tests.test_header_validation_tdd -v
+
+tdd-record: ## run TDD record operations tests
+	python -m unittest tests.test_record_operations_tdd -v
+
+tdd-error: ## run TDD error handling tests
+	python -m unittest tests.test_error_handling_tdd -v
+
+tdd-dbase3: ## run TDD dBase III comprehensive tests
+	python -m unittest tests.test_dbase3_comprehensive_tdd -v
+
+test-tdd: tdd ## alias for tdd target
+
+bdd: ## run BDD tests with behave
+	behave
+
+bdd-verbose: ## run BDD tests with verbose output
+	behave -D verbose=true
+
+bdd-smoke: ## run smoke tests only (critical scenarios)
+	behave --tags=smoke
+
+bdd-regression: ## run regression test suite
+	behave --tags=regression
+
+bdd-wip: ## run work-in-progress scenarios
+	behave -D wip=true --tags=wip
+
+bdd-performance: ## run performance tests
+	behave -D performance=true --tags=performance
+
+bdd-report: ## run BDD tests and generate HTML report
+	behave --format=html --outfile=reports/bdd_report.html
+
+test-bdd: bdd ## alias for bdd target
 
 coverage: ## check code coverage quickly with the default Python
 	coverage run --source dbfpy3 setup.py test
