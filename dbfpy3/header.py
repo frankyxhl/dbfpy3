@@ -153,12 +153,18 @@ class DbfHeader():
             data = stream.read(32)
             if len(data) < 32 or data[0] == 0x0D:
                 break
-            field = DbfFields.parse(data, pos)
-            if pos != field.start:
+            field = DbfFields.parse(data)
+            # For dBase III compatibility, we need to be more lenient with field start positions
+            # dBase III may have different field alignment than FoxPro
+            if signature not in (0x03, 0x83) and pos != field.start:
+                # Only enforce strict field position checking for non-dBase III files
                 raise ValueError(
                     'dbf fields definition is corrupt, '
                     'fields start does not match.'
                 )
+            # Update field start position to match expected position for dBase III
+            if signature in (0x03, 0x83):
+                field.start = pos
             fields.append(field)
             pos = field.start + field.length
 
