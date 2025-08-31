@@ -1,5 +1,37 @@
 # Decision Log - dbfpy3
 
+## 2025-08-31: Critical Bug Fix - Header Record Count
+
+### Decision: Immediately Fix Header _changed Flag Issue
+**Context**: Discovered critical bug where new records weren't persisted to disk
+**Decision**: Set header._changed = True when incrementing record count
+**Rationale**:
+- Data integrity issue causing silent data loss
+- Records appeared to save but were lost on file reopen
+- Simple one-line fix with huge impact
+- Critical enough to warrant immediate patch release
+**Trade-offs**:
+- Pro: Prevents data loss immediately
+- Pro: Minimal code change (one line)
+- Pro: No API changes or breaking changes
+- Con: Should have been caught earlier
+- Con: May have affected production systems
+
+### Decision: Add Dedicated Test File for Regression Prevention
+**Context**: Need to ensure this specific bug never recurs
+**Decision**: Create tests/test_header_record_count.py with targeted tests
+**Rationale**:
+- Isolation makes the test purpose crystal clear
+- Easy to run just these tests during debugging
+- Documents the exact bug scenario
+- Regression prevention for critical issue
+**Trade-offs**:
+- Pro: Clear test intent and documentation
+- Pro: Fast targeted testing possible
+- Pro: Good example for future similar issues
+- Con: Another test file to maintain
+- Con: Some overlap with existing tests
+
 ## 2025-08-31: FoxPro Double Field Implementation
 
 ### Decision: Implement Native Double Field Type B Support

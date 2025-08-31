@@ -3,9 +3,20 @@
 **Get up to speed in < 2 minutes**
 
 ## Current Focus
-Working on FoxPro field type support. Just completed Double field type B implementation.
+**CRITICAL**: Just fixed data integrity bug - header record count wasn't persisting. Must commit ASAP.
+Also completed FoxPro Double field type B implementation.
 
 ## Latest Changes (2025-08-31)
+
+### CRITICAL BUG FIX
+```python
+# FIXED: Header record count now properly persists
+# Bug: New records were lost when file was reopened
+# Fix: Set header._changed = True when incrementing record_count
+# File: dbfpy3/dbf.py line 208
+```
+
+### NEW FEATURE
 ```python
 # NEW: FoxPro Double field support (type B)
 from dbfpy3 import dbf
@@ -23,32 +34,44 @@ db.close()
 ```
 
 ## Project State
-- **Branch**: develop (1 commit ahead)
-- **Tests**: 197/197 passing (100%)
-- **Uncommitted**: Double field implementation ready to commit
-- **Next**: Commit, version bump to 4.3.0, potential release
+- **Branch**: develop (2 commits ahead)
+- **Tests**: 200/200 passing (100%, 26 skipped)
+- **Uncommitted**: 
+  - **CRITICAL**: Header record count fix in dbf.py
+  - Test file: test_header_record_count.py
+  - Double field implementation from earlier
+- **Next**: URGENT - Commit critical fix, then version bump for patch release
 
 ## Key Files Modified
 ```bash
-dbfpy3/fields.py         # Added DbfDoubleField class
-tests/test_double_field.py  # 9 new test cases
-README.md               # Documentation and examples
+# CRITICAL FIX (uncommitted)
+dbfpy3/dbf.py                    # Fixed header._changed flag bug
+tests/test_header_record_count.py  # 3 test cases for regression prevention
+
+# Feature addition (committed)
+dbfpy3/fields.py                # Added DbfDoubleField class
+tests/test_double_field.py      # 9 new test cases
+README.md                       # Documentation and examples
 ```
 
 ## To Continue Work
 ```bash
-# Check current state
-git status
-python -m unittest discover tests  # Verify all tests pass
+# URGENT - Commit critical bug fix first!
+git add dbfpy3/dbf.py tests/test_header_record_count.py
+git commit -m "fix: Critical - Set header._changed flag when updating record count
 
-# Commit the Double field feature
-git add dbfpy3/fields.py tests/test_double_field.py README.md
-git commit -m "feat: Add FoxPro Double field type B support"
+Fixes data loss bug where new records weren't persisted to disk.
+The header record count was incremented but _changed flag wasn't set,
+causing flush() to skip writing the updated header."
 
-# Consider release
-# Update version in setup.py to 4.3.0
-# Update HISTORY.rst with changelog
-# Push and create PR/release
+# Then verify everything works
+python3 -m unittest discover tests  # Should show 200 tests passing
+
+# Consider immediate patch release (4.3.1)
+# This is a critical data integrity fix!
+# Update version in setup.py
+# Update HISTORY.rst with CRITICAL FIX notice
+# Push and create urgent PR/release
 ```
 
 ## Architecture Quick Reference

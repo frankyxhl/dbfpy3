@@ -206,6 +206,7 @@ class Dbf(object):
             # because set index will raise error if out of range
             self.header.record_count += 1
             record.index = self.header.record_count - 1
+            self.header._changed = True  # Mark header as changed to force update
 
         self.stream.seek(record.position)
         self.stream.write(record.to_bytes())
