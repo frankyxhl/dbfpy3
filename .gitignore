@@ -51,6 +51,10 @@ coverage.xml
 reports/
 *.bdd.log
 *_bdd_tests_*/
+pretty.output
+*.output
+allure-results/
+allure-report/
 
 # Translations
 *.mo
@@ -108,5 +112,26 @@ ENV/
 
 # IDE settings
 .vscode/
-
 .idea/
+
+# Temporary and debug files
+test_debug*.py
+temp_*.py
+simple_steps.py
+*.tmp
+*.temp
+*~
+analyze_*.py
+debug_*.py
+failure_*.py
+
+# AI/MCP generated folders
+.serena/
+
+# Backup directories
+*_backup/
+features_backup/
+
+# Analysis and temporary scripts
+analyze_failures.py
+test_analysis_*.py

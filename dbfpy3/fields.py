@@ -273,6 +273,9 @@ class DbfNumericField(DbfField):
 
     def encode(self, value, encoding=locale.getpreferredencoding()):
         """Return string containing encoded ``value``."""
+        if value is None:
+            # Return spaces for None value
+            return (b" " * self.length)
         string = ("%*.*f" % (self.length, self.decimal_count, value))
         if len(string) > self.length:
             if not (0 <= string.find(".") <= self.length):

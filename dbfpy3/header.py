@@ -77,7 +77,7 @@ class DbfHeader():
         self._ignore_errors = self._code_page = self._last_update = None
 
         self.signature = signature
-        self.fields = list(fields) if fields is not None else []
+        self.fields = []
         self.last_update = last_update
         self.record_length = record_length
         self.header_length = header_length
@@ -86,6 +86,34 @@ class DbfHeader():
         self.code_page = code_page
         self.ignore_errors = ignore_errors
         self._changed = False
+        
+        # Process fields - convert tuples to DbfField objects if needed
+        if fields is not None:
+            for field in fields:
+                if isinstance(field, DbfField):
+                    self.fields.append(field)
+                else:
+                    # Process tuple field definition
+                    if hasattr(field, '__iter__'):
+                        args = list(field)[:4]
+                        type_code = args.pop(0)
+                        name = args.pop(0)
+                        
+                        if isinstance(name, str):
+                            name = name.encode(self.code_page.encoding)
+                        
+                        field_obj = DbfFields.get(type_code)(
+                            name,
+                            *args,
+                            start=self.record_length,
+                            ignore_errors=self._ignore_errors
+                        )
+                        self.fields.append(field_obj)
+                        self.record_length += field_obj.length
+            
+            # Update header length if fields were added
+            if self.fields:
+                self._calc_header_length()
 
         if not self.ignore_errors and (
             self._calc_record_length() != self.record_length
@@ -208,11 +236,16 @@ class DbfHeader():
 
     def index_of_field_name(self, name):
         """Index of field named ``name``."""
-        if isinstance(name, str):
-            name = name.encode(self.code_page.encoding)
-
+        # Normalize name to string for comparison
+        if isinstance(name, bytes):
+            name = name.decode(self.code_page.encoding)
+        
+        # Compare as strings
         for index, field in enumerate(self.fields):
-            if field.name == name:
+            field_name = field.name
+            if isinstance(field_name, bytes):
+                field_name = field_name.decode(self.code_page.encoding)
+            if field_name == name:
                 return index
         else:
             raise KeyError('Field not found: {}'.format(name))

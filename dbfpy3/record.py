@@ -91,7 +91,7 @@ class DbfRecord(object):
 
         if index < 0:
             # index from the right side
-            index += self.header.record_count + 1
+            index += self.header.record_count
 
         self._index = index
 
@@ -174,8 +174,17 @@ class DbfRecord(object):
         """Set field value by integer index of the field or string name."""
         if isinstance(key, int):
             # integer index of the field
-            return self.fields[key]
-        # assuming string field name
-        self.fields[self.header.index_of_field_name(key)] = value
+            self.fields[key] = value
+        else:
+            # assuming string field name
+            self.fields[self.header.index_of_field_name(key)] = value
+    
+    def __contains__(self, key):
+        """Check if field name exists in record."""
+        try:
+            self.header.index_of_field_name(key)
+            return True
+        except KeyError:
+            return False
 
 # vim: et sts=4 sw=4 :
