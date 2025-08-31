@@ -21,10 +21,10 @@ for line in sys.stdin:
 endef
 export PRINT_HELP_PYSCRIPT
 
-BROWSER := python -c "$$BROWSER_PYSCRIPT"
+BROWSER := python3 -c "$$BROWSER_PYSCRIPT"
 
 help:
-	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+	@python3 -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
 
@@ -54,34 +54,34 @@ lint: ## check style with flake8
 	flake8 dbfpy3 tests
 
 test: ## run all tests (traditional, TDD, and BDD)
-	python -m unittest discover tests -v && behave
+	python3 -m unittest discover tests -v && behave
 
 test-quick: ## run quick smoke tests (fast subset)
-	python -m unittest discover tests -p "test_[!_]*" -v && behave --tags=@smoke
+	python3 -m unittest discover tests -p "test_[!_]*" -v && behave --tags=@smoke
 
 test-traditional: ## run traditional unit tests only
-	python setup.py test
+	python3 setup.py test
 
 test-all: ## run tests on every Python version with tox
 	tox
 
 tdd: ## run TDD tests (unit tests)
-	python -m unittest discover tests -p "test_*_tdd.py" -v
+	python3 -m unittest discover tests -p "test_*_tdd.py" -v
 
 tdd-field: ## run TDD field parsing tests
-	python -m unittest tests.test_field_parsing_tdd -v
+	python3 -m unittest tests.test_field_parsing_tdd -v
 
 tdd-header: ## run TDD header validation tests
-	python -m unittest tests.test_header_validation_tdd -v
+	python3 -m unittest tests.test_header_validation_tdd -v
 
 tdd-record: ## run TDD record operations tests
-	python -m unittest tests.test_record_operations_tdd -v
+	python3 -m unittest tests.test_record_operations_tdd -v
 
 tdd-error: ## run TDD error handling tests
-	python -m unittest tests.test_error_handling_tdd -v
+	python3 -m unittest tests.test_error_handling_tdd -v
 
 tdd-dbase3: ## run TDD dBase III comprehensive tests
-	python -m unittest tests.test_dbase3_comprehensive_tdd -v
+	python3 -m unittest tests.test_dbase3_comprehensive_tdd -v
 
 test-tdd: tdd ## alias for tdd target
 
@@ -109,7 +109,7 @@ bdd-report: ## run BDD tests and generate HTML report
 test-bdd: bdd ## alias for bdd target
 
 coverage: ## check code coverage quickly with the default Python
-	coverage run --source dbfpy3 setup.py test
+	coverage run --source dbfpy3 -m unittest discover tests
 	coverage report -m
 	coverage html
 	$(BROWSER) htmlcov/index.html
@@ -129,9 +129,9 @@ release: dist ## package and upload a release
 	twine upload dist/*
 
 dist: clean ## builds source and wheel package
-	python setup.py sdist
-	python setup.py bdist_wheel
+	python3 setup.py sdist
+	python3 setup.py bdist_wheel
 	ls -l dist
 
 install: clean ## install the package to the active Python's site-packages
-	python setup.py install
+	python3 setup.py install

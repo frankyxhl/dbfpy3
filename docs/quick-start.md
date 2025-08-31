@@ -3,12 +3,35 @@
 **Get up to speed in < 2 minutes**
 
 ## Current Focus
-**CRITICAL**: Just fixed data integrity bug - header record count wasn't persisting. Must commit ASAP.
-Also completed FoxPro Double field type B implementation.
+**v5.0.0 Ready**: Complete pandas integration with DataFrame support
+**v4.2.4 Released**: Critical data integrity bug fixed
 
 ## Latest Changes (2025-08-31)
 
-### CRITICAL BUG FIX
+### MAJOR FEATURE: Pandas Integration (v5.0.0)
+```python
+# NEW: Complete DataFrame support
+from dbfpy3.pandas_integration import read_dbf, write_dbf
+import pandas as pd
+
+# Read DBF to DataFrame
+df = read_dbf('legacy_data.dbf', encoding='cp1252')
+
+# Analyze with pandas
+stats = df.describe()
+pivot = df.pivot_table(values='SALES', index='REGION')
+
+# Write DataFrame to DBF
+write_dbf(df, 'output.dbf', encoding='cp1252')
+
+# Advanced: Custom field specifications
+write_dbf(df, 'optimized.dbf', field_specs={
+    'price': ('N', 10, 2),  # Numeric with 2 decimals
+    'notes': ('M', 0, 0),    # Memo field
+})
+```
+
+### CRITICAL BUG FIX (v4.2.4)
 ```python
 # FIXED: Header record count now properly persists
 # Bug: New records were lost when file was reopened
@@ -16,68 +39,78 @@ Also completed FoxPro Double field type B implementation.
 # File: dbfpy3/dbf.py line 208
 ```
 
-### NEW FEATURE
-```python
-# NEW: FoxPro Double field support (type B)
-from dbfpy3 import dbf
-
-db = dbf.Dbf('data.dbf', new=True)
-db.add_field(
-    ('B', 'LATITUDE', 8),   # NEW: Double precision field
-    ('B', 'LONGITUDE', 8),  # 15-17 decimal digits precision
-)
-rec = db.new()
-rec['LATITUDE'] = 40.748817123456789  # High precision preserved
-rec['LONGITUDE'] = -73.985428987654321
-db.write(rec)
-db.close()
-```
-
 ## Project State
-- **Branch**: develop (2 commits ahead)
-- **Tests**: 200/200 passing (100%, 26 skipped)
+- **Branch**: develop (3 commits ahead)
+- **Tests**: 217/217 passing (100% - includes new pandas tests)
 - **Uncommitted**: 
-  - **CRITICAL**: Header record count fix in dbf.py
-  - Test file: test_header_record_count.py
-  - Double field implementation from earlier
-- **Next**: URGENT - Commit critical fix, then version bump for patch release
+  - Pandas integration module and tests
+  - Documentation updates
+  - Makefile and .gitignore improvements
+- **Next**: Commit pandas work, prepare v5.0.0 release
 
 ## Key Files Modified
 ```bash
-# CRITICAL FIX (uncommitted)
-dbfpy3/dbf.py                    # Fixed header._changed flag bug
-tests/test_header_record_count.py  # 3 test cases for regression prevention
+# Pandas Integration (uncommitted)
+dbfpy3/pandas_integration.py           # Complete DataFrame support
+tests/test_pandas_integration_tdd.py   # 17 comprehensive tests
+features/pandas_*.feature              # 4 BDD scenarios
+docs/pandas_integration_guide.md       # Full documentation
+ROADMAP_5.0.md                         # Release planning
 
-# Feature addition (committed)
-dbfpy3/fields.py                # Added DbfDoubleField class
-tests/test_double_field.py      # 9 new test cases
-README.md                       # Documentation and examples
+# Critical Fix (committed)
+dbfpy3/dbf.py                          # Fixed header._changed flag bug
+
+# Double Field (committed)  
+dbfpy3/fields.py                       # Added DbfDoubleField class
 ```
 
 ## To Continue Work
 ```bash
-# URGENT - Commit critical bug fix first!
-git add dbfpy3/dbf.py tests/test_header_record_count.py
-git commit -m "fix: Critical - Set header._changed flag when updating record count
+# 1. Commit pandas integration
+git add dbfpy3/pandas_integration.py tests/test_pandas_integration_tdd.py
+git add features/pandas*.feature docs/pandas_integration_guide.md
+git add ROADMAP_5.0.md .gitignore Makefile
+git commit -m "feat: Add complete pandas DataFrame integration (v5.0.0)
 
-Fixes data loss bug where new records weren't persisted to disk.
-The header record count was incremented but _changed flag wasn't set,
-causing flush() to skip writing the updated header."
+Major feature addition with bidirectional DataFrame conversion,
+intelligent type mapping, and chunked processing for large files."
 
-# Then verify everything works
-python3 -m unittest discover tests  # Should show 200 tests passing
+# 2. Verify all tests pass
+python3 -m unittest discover tests  # Should show 217 tests passing
+behave features/                    # Run BDD scenarios
 
-# Consider immediate patch release (4.3.1)
-# This is a critical data integrity fix!
-# Update version in setup.py
-# Update HISTORY.rst with CRITICAL FIX notice
-# Push and create urgent PR/release
+# 3. Prepare v5.0.0 release
+# - Update version in setup.py to 5.0.0
+# - Add pandas as optional dependency in setup.py extras_require
+# - Update README with pandas examples
+# - Tag and release
+
+# 4. Consider v4.2.4 hotfix branch
+# Cherry-pick critical fix to main for immediate release
 ```
 
 ## Architecture Quick Reference
 
-### Field Types Now Supported
-- **B** - Double (NEW) - IEEE 754 double-precision
+### Pandas Type Mapping
+```python
+# Pandas → DBF
+int64      → 'N' (Numeric, 18 digits)
+float64    → 'B' (Double, IEEE 754)
+object/str → 'C' (Character, auto-sized)
+datetime64 → 'D' (Date)
+bool       → 'L' (Logical)
+
+# DBF → Pandas
+'C' → object (string)
+'N' → int64/float64 (based on decimals)
+'D' → datetime64[ns]
+'L' → bool
+'B' → float64
+'M' → object (memo text)
+```
+
+### Field Types Supported
+- **B** - Double - IEEE 754 double-precision
 - C - Character
 - N - Numeric  
 - D - Date
@@ -94,7 +127,13 @@ python3 -m unittest discover tests  # Should show 200 tests passing
 - `DbfHeader` - File header management
 - `DbfRecord` - Individual records
 - `DbfField` - Base field class
-- `DbfDoubleField` - New Double field implementation
+- `DbfDoubleField` - Double field implementation
+- `DbfPandasConverter` - NEW: DataFrame converter
+
+### Pandas API
+- `read_dbf()` - Read DBF to DataFrame
+- `write_dbf()` - Write DataFrame to DBF
+- `DbfPandasConverter` - Class-based conversion
 
 ### Testing
 ```bash
@@ -111,21 +150,31 @@ coverage report
 
 ## Common Operations
 
-### Read DBF file
+### Read DBF file (Traditional)
 ```python
 with dbf.Dbf('file.dbf') as db:
     for record in db:
         print(record['FIELD_NAME'])
 ```
 
-### Create new DBF
+### Read DBF to DataFrame (NEW)
 ```python
-db = dbf.Dbf('new.dbf', new=True)
-db.add_field(('C', 'NAME', 30))
-rec = db.new()
-rec['NAME'] = 'Value'
-db.write(rec)
-db.close()
+from dbfpy3.pandas_integration import read_dbf
+df = read_dbf('file.dbf', encoding='cp1252')
+print(df.head())
+```
+
+### Create DBF from DataFrame (NEW)
+```python
+from dbfpy3.pandas_integration import write_dbf
+import pandas as pd
+
+df = pd.DataFrame({
+    'NAME': ['Alice', 'Bob'],
+    'AGE': [30, 25],
+    'JOINED': pd.to_datetime(['2020-01-01', '2021-06-15'])
+})
+write_dbf(df, 'output.dbf')
 ```
 
 ## Need More Context?

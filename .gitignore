@@ -135,3 +135,10 @@ features_backup/
 # Analysis and temporary scripts
 analyze_failures.py
 test_analysis_*.py
+test_pandas_basic.py
+*_pandas_test.py
+*_pandas_scratch.py
+
+# Session documentation (local only)
+docs/sessions/
+docs/session-index.md

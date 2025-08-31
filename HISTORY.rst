@@ -2,6 +2,21 @@
 History
 =======
 
+5.0.0 (2025-08-31) - PANDAS INTEGRATION
+----------------------------------------
+
+* **Major Feature**: Complete pandas DataFrame integration
+* Added ``dbfpy3.pandas_integration`` module with bidirectional conversion
+* Intelligent type mapping between pandas dtypes and DBF field types
+* Memory-efficient chunked processing for large files (default 10,000 records)
+* Optional pandas dependency - core library remains zero-dependency
+* Added ``read_dbf()`` and ``write_dbf()`` convenience functions
+* Added ``DbfPandasConverter`` class for advanced use cases
+* Comprehensive test suite - 17 new TDD tests (217 total, 100% passing)
+* Added 4 BDD feature scenarios for real-world use cases
+* Full documentation and migration guide included
+* Backward compatible - no breaking changes to existing API
+
 4.2.4 (2025-08-31) - CRITICAL FIX
 ----------------------------------
 

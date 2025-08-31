@@ -1,28 +1,32 @@
 # Project Status - dbfpy3
 
-**Last Updated**: 2025-08-31 08:28 UTC
+**Last Updated**: 2025-08-31 09:25 UTC
 
 ## Current State
 
 ### ✅ Recently Completed
-- **Critical Bug Fix** - Fixed header record count not persisting (data integrity issue)
+- **Pandas Integration (v5.0.0)** - Complete bidirectional DataFrame conversion
+- **Critical Bug Fix (v4.2.4)** - Fixed header record count not persisting (data integrity issue)
 - **FoxPro Double Field Type B** - Native support for 8-byte IEEE 754 double-precision fields
-- **Comprehensive Test Suite** - 200 tests total (100% passing)
-- **Enhanced Documentation** - 618-line README with complete examples
+- **Comprehensive Test Suite** - 217 tests total (100% passing)
+- **BDD Scenarios** - 4 pandas integration feature files
+- **Enhanced Documentation** - Full pandas integration guide + 618-line README
 - **dBase III Compatibility** - Full support for legacy format
 
 ### 🚀 Ready for Release
-- All tests passing (200/200, 26 skipped)
+- **v4.2.4**: Critical fix ready (already committed)
+- **v5.0.0**: Pandas integration complete (needs commit)
+- All tests passing (217/217)
 - Documentation complete and professional
-- Critical data integrity bug fixed
-- Version bump candidate: 4.3.1 (patch release recommended for critical fix)
+- Breaking changes: None (backward compatible)
 
 ### 📊 Metrics
-- **Test Coverage**: 200 tests (188 original + 9 Double field + 3 header tests)
-- **Pass Rate**: 100% (26 skipped for unimplemented features)
-- **Field Types Supported**: 12 (including new Double type B)
+- **Test Coverage**: 217 tests (200 core + 17 pandas integration)
+- **Pass Rate**: 100%
+- **BDD Scenarios**: 4 feature files (pandas workflows)
+- **Field Types Supported**: 12 (including Double type B)
 - **Code Pages Supported**: 30+
-- **Dependencies**: 0 (pure Python)
+- **Dependencies**: 0 (core), pandas (optional for v5.0.0)
 
 ## Field Type Support Matrix
 
@@ -43,28 +47,33 @@
 ## Next Steps
 
 ### Immediate Actions
-1. Commit critical header record count fix
-2. Commit Double field implementation
-3. Update HISTORY.rst with critical bug fix notice
-4. **URGENT**: Consider patch release 4.3.1 for data integrity fix
-5. PyPI release recommended due to critical nature
+1. Commit pandas integration work (all new files)
+2. Update setup.py for v5.0.0 with optional pandas dependency
+3. Cherry-pick v4.2.4 fix to main for hotfix release
+4. Prepare v5.0.0 release notes and migration guide
+5. PyPI releases: v4.2.4 (critical) then v5.0.0 (feature)
 
 ### Future Enhancements
-- [ ] Additional FoxPro field types (if requested)
-- [ ] Performance optimizations for large files
+- [x] ~~Pandas DataFrame support~~ **DONE in v5.0.0**
+- [ ] SQL database export/import
+- [ ] Performance profiling for large files (>1GB)
 - [ ] Async I/O support
 - [ ] Type hints throughout codebase
+- [ ] Streaming API for memory efficiency
 
 ## Known Issues
-- ~~Critical: Header record count not persisting~~ **FIXED**
-- Some BDD step definitions pending (non-blocking)
+- ~~Critical: Header record count not persisting~~ **FIXED in v4.2.4**
+- None currently blocking release
 
 ## Architecture Decisions
 
 ### Recent Decisions
+- **Pandas as Optional**: Preserve zero-dependency core (v5.0.0)
+- **Type Mapping**: Conservative defaults with user overrides
+- **Chunking**: 10,000 record default for memory efficiency
 - **Double Field Format**: IEEE 754 standard for maximum compatibility
 - **Byte Order**: Little-endian to match FoxPro convention
-- **Test Strategy**: Comprehensive unit tests for each field type
+- **Test Strategy**: TDD + BDD for comprehensive coverage
 
 ### Core Principles Maintained
 - Zero dependencies (pure Python)
@@ -76,15 +85,21 @@
 
 ### Branch Status
 - Current: `develop`
-- Ahead of origin by: 2 commits
-- Ready to push: Yes (critical fix pending commit)
+- Ahead of origin by: 3 commits
+- Ready to push: Yes (pandas integration pending commit)
 
-### File Changes
-- **Modified**: `dbfpy3/dbf.py` (critical header._changed flag fix)
-- Modified: `dbfpy3/fields.py` (DbfDoubleField implementation)
-- Modified: `README.md` (Double field documentation)
-- **New**: `tests/test_header_record_count.py` (3 critical test cases)
-- New: `tests/test_double_field.py` (9 test cases)
+### File Changes (Uncommitted)
+- **New**: `dbfpy3/pandas_integration.py` (complete DataFrame support)
+- **New**: `tests/test_pandas_integration_tdd.py` (17 tests)
+- **New**: `features/pandas_*.feature` (4 BDD scenarios)
+- **New**: `docs/pandas_integration_guide.md` (full documentation)
+- **New**: `ROADMAP_5.0.md` (release planning)
+- Modified: `.gitignore`, `Makefile` (minor improvements)
+
+### Recent Commits
+- Critical fix: Header record count persistence (v4.2.4)
+- Feature: FoxPro Double field type B support
+- Docs: Comprehensive README enhancement
 
 ## Contact & Resources
 
