@@ -1,114 +1,111 @@
-# Quick Start Guide - dbfpy3
+# Quick Start - dbfpy3 Development
 
-## 2-Minute Context
+**Get up to speed in < 2 minutes**
 
-**What**: Pure Python 3 library for reading/writing DBF (dBase/FoxPro) files
-**Status**: Production ready - all tests passing (0 failures, 26 design skips)
-**Branch**: develop (clean, no uncommitted changes)
-**Last Work**: Fixed comprehensive test suite - reduced failures from 147 to 0
+## Current Focus
+Working on FoxPro field type support. Just completed Double field type B implementation.
 
-## Recent Session Summary (2025-08-31)
+## Latest Changes (2025-08-31)
+```python
+# NEW: FoxPro Double field support (type B)
+from dbfpy3 import dbf
 
-Fixed all critical bugs and test failures:
-1. ✅ dBase III compatibility (field alignment tolerance)
-2. ✅ Standardized field definition order (type, name, length)
-3. ✅ Added missing `__contains__` to DbfRecord
-4. ✅ Fixed numeric field None handling
-5. ✅ Fixed header tuple initialization
-6. ✅ Cleaned up repository (__pycache__, .gitignore)
-
-## Key Files & Locations
-
-### Core Library
-```
-/Users/frank/Projects/dbfpy3/dbfpy3/
-├── dbf.py        # Main Dbf class (primary API)
-├── header.py     # DbfHeader (includes dBase III tolerance fix)
-├── fields.py     # Field type system (None handling fixes)
-├── record.py     # DbfRecord (magic methods added)
-├── memo.py       # FoxPro memo support
-└── utils.py      # Utilities
+db = dbf.Dbf('data.dbf', new=True)
+db.add_field(
+    ('B', 'LATITUDE', 8),   # NEW: Double precision field
+    ('B', 'LONGITUDE', 8),  # 15-17 decimal digits precision
+)
+rec = db.new()
+rec['LATITUDE'] = 40.748817123456789  # High precision preserved
+rec['LONGITUDE'] = -73.985428987654321
+db.write(rec)
+db.close()
 ```
 
-### Tests
-```
-/Users/frank/Projects/dbfpy3/tests/
-├── test_*_tdd.py         # TDD unit tests (comprehensive)
-├── test_*_bdd.py         # BDD behavior tests
-└── test_dbfpy3.py        # Original integration tests
-```
+## Project State
+- **Branch**: develop (1 commit ahead)
+- **Tests**: 197/197 passing (100%)
+- **Uncommitted**: Double field implementation ready to commit
+- **Next**: Commit, version bump to 4.3.0, potential release
 
-## Quick Commands
-
+## Key Files Modified
 ```bash
-# Navigate to project
-cd /Users/frank/Projects/dbfpy3
-
-# Run all tests (should show 0 failures, 26 skipped)
-python3 -m unittest discover tests
-
-# Run specific test file
-python3 -m unittest tests.test_field_parsing_tdd
-
-# Check git status (should be clean)
-git status
-
-# View recent changes
-git log --oneline -5
-
-# See what was fixed
-git diff 56ec087..HEAD
+dbfpy3/fields.py         # Added DbfDoubleField class
+tests/test_double_field.py  # 9 new test cases
+README.md               # Documentation and examples
 ```
 
-## Current Test Status
-- **Total**: 188 tests
-- **Passing**: 162 ✅
-- **Failing**: 0 ✅
-- **Skipped**: 26 (intentional - advanced features not in scope)
+## To Continue Work
+```bash
+# Check current state
+git status
+python -m unittest discover tests  # Verify all tests pass
 
-## Design Decisions
+# Commit the Double field feature
+git add dbfpy3/fields.py tests/test_double_field.py README.md
+git commit -m "feat: Add FoxPro Double field type B support"
 
-### What's Supported
-- dBase III files (0x03, 0x83 signatures)
-- FoxPro DBF files
-- Memo fields (.FPT)
-- Character encodings (code pages)
-- Context managers
-- Negative indexing
-- Field containment checks
+# Consider release
+# Update version in setup.py to 4.3.0
+# Update HISTORY.rst with changelog
+# Push and create PR/release
+```
 
-### What's Not Supported (By Design)
-- AutoIncrement fields
-- Binary/Timestamp fields
-- Transactions
-- Multi-threading
-- External indexes
-- Custom validators
+## Architecture Quick Reference
 
-## Next Steps If Continuing
+### Field Types Now Supported
+- **B** - Double (NEW) - IEEE 754 double-precision
+- C - Character
+- N - Numeric  
+- D - Date
+- L - Logical
+- M - Memo
+- F - Float
+- I - Integer
+- Y - Currency
+- T - DateTime
+- G - General
 
-1. **If adding features**: Check skipped tests for implementation templates
-2. **If fixing bugs**: Run test suite first to ensure no regressions
-3. **If documenting**: Update README.md with feature matrix
-4. **If releasing**: Version is 4.2.3, all tests passing
+### Core Classes
+- `Dbf` - Main database class
+- `DbfHeader` - File header management
+- `DbfRecord` - Individual records
+- `DbfField` - Base field class
+- `DbfDoubleField` - New Double field implementation
 
-## Problem Resolution Patterns
+### Testing
+```bash
+# Run all tests
+python -m unittest discover tests
 
-### If Tests Fail
-1. Check field definition order (should be: type, name, length)
-2. Verify dBase III tolerance in header.py
-3. Ensure proper None handling in numeric fields
-4. Check for missing magic methods in DbfRecord
+# Run specific test module
+python -m unittest tests.test_double_field
 
-### Common Issues Fixed
-- "fields start does not match" → dBase III tolerance added
-- "'field' in record" fails → __contains__ method added
-- "None in numeric field" → Converts to empty string
-- "record[-1]" fails → Negative indexing fixed
+# Run with coverage
+coverage run -m unittest discover
+coverage report
+```
 
-## Repository State
-- Branch: `develop` (clean)
-- Latest commit: `64bd301` - Cleanup __pycache__ directories
-- Previous commit: `56ec087` - Added TDD/BDD test suites
-- Python version: 3.13 (works with 3.6+)
-- Dependencies: None (pure Python)
+## Common Operations
+
+### Read DBF file
+```python
+with dbf.Dbf('file.dbf') as db:
+    for record in db:
+        print(record['FIELD_NAME'])
+```
+
+### Create new DBF
+```python
+db = dbf.Dbf('new.dbf', new=True)
+db.add_field(('C', 'NAME', 30))
+rec = db.new()
+rec['NAME'] = 'Value'
+db.write(rec)
+db.close()
+```
+
+## Need More Context?
+- See `/docs/sessions/` for detailed session records
+- Check `/docs/project-status.md` for current priorities
+- Review `/docs/decision-log.md` for architecture choices

@@ -335,6 +335,34 @@ class DbfCurrencyField(DbfField):
         return struct.pack("<q", round(value * 10000))
 
 
+class DbfDoubleField(DbfField):
+    """Definition of the FoxPro double-precision field."""
+
+    type_code = b'B'
+    fixed_length = 8
+    default_value = 0.0
+
+    def decode(self, value, encoding=None):
+        """Return a double-precision float decoded from ``value``.
+        
+        Decodes an 8-byte IEEE 754 double-precision floating-point value
+        stored in little-endian format as used by FoxPro.
+        """
+        if not value or value == b'\x00' * 8:
+            return self.default_value
+        return struct.unpack("<d", value)[0]
+
+    def encode(self, value, encoding=None):
+        """Return bytes containing encoded ``value``.
+        
+        Encodes a double-precision floating-point value as 8-byte
+        IEEE 754 format in little-endian byte order.
+        """
+        if value is None:
+            return b'\x00' * self.fixed_length
+        return struct.pack("<d", float(value))
+
+
 class DbfLogicalField(DbfField):
     """Definition of the logical field."""
 

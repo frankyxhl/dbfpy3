@@ -1,5 +1,51 @@
 # Decision Log - dbfpy3
 
+## 2025-08-31: FoxPro Double Field Implementation
+
+### Decision: Implement Native Double Field Type B Support
+**Context**: User reported needing "nasty hacks" to handle FoxPro Double fields
+**Decision**: Add full native support for Double field type (B)
+**Rationale**:
+- Eliminates need for workarounds and external libraries
+- FoxPro Double is a standard field type that should be supported
+- IEEE 754 format is well-understood and easy to implement
+- Improves library completeness for FoxPro compatibility
+**Trade-offs**:
+- Pro: Native support for high-precision floating-point data
+- Pro: No external dependencies needed
+- Pro: Standard IEEE 754 format ensures compatibility
+- Con: Binary floating-point has inherent precision limitations
+- Con: Adds another field type to maintain
+
+### Decision: Use IEEE 754 Double-Precision Format
+**Context**: Need to choose encoding format for Double fields
+**Decision**: Use standard IEEE 754 double-precision (binary64)
+**Rationale**:
+- This is what FoxPro uses natively
+- Python's struct module handles it perfectly
+- CPU-native format for best performance
+- 15-17 decimal digits precision sufficient for most use cases
+**Trade-offs**:
+- Pro: Direct hardware support on all platforms
+- Pro: Fast encoding/decoding
+- Pro: Matches FoxPro exactly
+- Con: Binary floating-point rounding issues
+- Con: Not suitable for exact decimal arithmetic
+
+### Decision: Little-Endian Byte Order
+**Context**: Need to choose byte order for Double field storage
+**Decision**: Use little-endian (Intel/x86) byte order
+**Rationale**:
+- FoxPro was x86-centric and uses little-endian
+- Consistent with other numeric fields in the library
+- Most common on modern systems
+**Trade-offs**:
+- Pro: Direct FoxPro compatibility
+- Pro: Consistent with rest of library
+- Pro: Native on x86/x64 platforms
+- Con: Requires byte swapping on big-endian systems
+- Con: Not network byte order
+
 ## 2025-08-31: Test Suite Refactoring Decisions
 
 ### Decision: Skip Rather Than Implement Advanced Features

@@ -55,6 +55,7 @@
 | Y | Currency | decimal.Decimal | 8-byte fixed point |
 | T | DateTime | datetime.datetime | 8 bytes |
 | G | General | bytes | OLE/binary data |
+| **B** | **Double** | **float** | **8-byte IEEE 754** |
 
 ## 🚀 Quick Start
 
@@ -81,6 +82,7 @@ db.add_field(
     ('C', 'NAME', 30),      # Character field, max 30 chars
     ('D', 'BIRTHDATE'),     # Date field
     ('N', 'SALARY', 10, 2), # Numeric field, 10 digits, 2 decimal places
+    ('B', 'DISTANCE', 8),   # Double precision field (FoxPro)
     ('L', 'ACTIVE')         # Logical field (True/False)
 )
 
@@ -89,6 +91,7 @@ rec = db.new()
 rec['NAME'] = 'John Doe'
 rec['BIRTHDATE'] = datetime.date(1990, 1, 15)
 rec['SALARY'] = 75000.50
+rec['DISTANCE'] = 123.456789012345  # High precision double
 rec['ACTIVE'] = True
 db.write(rec)
 db.close()
@@ -110,6 +113,7 @@ db.add_field(
     ('C', 'NAME', 50),         # Character
     ('N', 'QTY', 8, 0),        # Integer numeric
     ('Y', 'PRICE', 10, 4),     # Currency (4 decimal places)
+    ('B', 'COORDINATE', 8),    # Double precision (FoxPro)
     ('D', 'CREATED'),          # Date
     ('T', 'MODIFIED'),         # DateTime
     ('L', 'ACTIVE'),           # Logical
@@ -123,6 +127,7 @@ rec['SKU'] = 'PROD-001'
 rec['NAME'] = 'Premium Widget'
 rec['QTY'] = 150
 rec['PRICE'] = Decimal('29.99')
+rec['COORDINATE'] = 40.748817123456789  # High-precision GPS coordinate
 rec['CREATED'] = datetime.date.today()
 rec['MODIFIED'] = datetime.datetime.now()
 rec['ACTIVE'] = True
@@ -155,6 +160,62 @@ with dbf.Dbf('customers.dbf') as db:
             # Update the record
             record['LAST_CONTACT'] = datetime.date.today()
             db.write(record)
+```
+
+### Working with High-Precision Double Fields
+
+FoxPro Double fields (type B) provide IEEE 754 double-precision floating-point storage with 15-17 decimal digits of precision:
+
+```python
+from dbfpy3 import dbf
+import math
+
+# Create DBF with Double precision fields for GPS coordinates
+db = dbf.Dbf('gps_data.dbf', new=True)
+db.add_field(
+    ('C', 'LOCATION', 50),
+    ('B', 'LATITUDE', 8),     # Double precision
+    ('B', 'LONGITUDE', 8),    # Double precision  
+    ('B', 'ALTITUDE', 8),     # Double precision
+    ('B', 'DISTANCE', 8),     # Double precision
+)
+
+# Add high-precision GPS data
+locations = [
+    {
+        'LOCATION': 'Empire State Building',
+        'LATITUDE': 40.748817123456789,
+        'LONGITUDE': -73.985428987654321,
+        'ALTITUDE': 381.0,
+        'DISTANCE': 0.0,
+    },
+    {
+        'LOCATION': 'Central Park',
+        'LATITUDE': 40.785091987654321,
+        'LONGITUDE': -73.968285123456789,
+        'ALTITUDE': 40.5,
+        'DISTANCE': math.sqrt((40.785091987654321 - 40.748817123456789)**2 + 
+                             (-73.968285123456789 - (-73.985428987654321))**2) * 111000,
+    }
+]
+
+for location_data in locations:
+    rec = db.new()
+    for field_name, value in location_data.items():
+        rec[field_name] = value
+    db.write(rec)
+
+db.close()
+
+# Read back and verify precision is maintained
+with dbf.Dbf('gps_data.dbf') as db:
+    for record in db:
+        print(f"Location: {record['LOCATION'].strip()}")
+        print(f"  Lat: {record['LATITUDE']:.15f}")
+        print(f"  Lng: {record['LONGITUDE']:.15f}")  
+        print(f"  Alt: {record['ALTITUDE']:.1f}m")
+        print(f"  Distance: {record['DISTANCE']:.3f}m")
+        print()
 ```
 
 ### Batch Operations
