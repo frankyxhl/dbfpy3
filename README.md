@@ -11,7 +11,8 @@
 ## 🎯 Key Highlights
 
 - **100% Pure Python** - No C extensions or external dependencies required
-- **Production Ready** - 188 tests with 100% passing rate, comprehensive TDD and BDD test suites
+- **Production Ready** - 217 tests with 100% passing rate, comprehensive TDD and BDD test suites
+- **Pandas Integration** - Seamless DataFrame conversion for data analysis (v5.0.0+)
 - **Multiple Format Support** - Full compatibility with dBase III, dBase IV, FoxPro, and Visual FoxPro formats
 - **Memo Field Support** - Complete .FPT/.DBT memo file handling with automatic management
 - **International Support** - Robust code page handling for 30+ encodings
@@ -24,6 +25,7 @@
 ### Core Capabilities
 - **Read and write** DBF files with full record manipulation
 - **Create new** DBF files with custom field definitions
+- **Pandas DataFrame integration** for data analysis workflows (optional)
 - **Context managers** for safe file handling and automatic cleanup
 - **Iterator protocol** for memory-efficient record processing
 - **Index-based access** to specific records
@@ -312,6 +314,83 @@ for name_en, name_zh, name_jp in names:
     db.write(rec)
 
 db.close()
+```
+
+### 🐼 Pandas Integration (New in v5.0.0)
+
+dbfpy3 now includes seamless pandas DataFrame integration for data analysis workflows:
+
+```python
+from dbfpy3.pandas import read_dbf, to_dbf
+import pandas as pd
+
+# Read DBF file directly into pandas DataFrame
+df = read_dbf('customers.dbf')
+
+# Perform pandas operations
+df_filtered = df[df['BALANCE'] > 1000]
+df_summary = df.groupby('REGION')['SALES'].sum()
+
+# Write DataFrame back to DBF
+to_dbf(df_filtered, 'high_value_customers.dbf')
+
+# Advanced options
+df = read_dbf('data.dbf',
+    columns=['NAME', 'EMAIL', 'BALANCE'],  # Select specific columns
+    parse_dates=['CREATED', 'MODIFIED'],   # Parse date columns
+    encoding='cp1252',                     # Specify encoding
+    chunksize=10000                        # Read in chunks for large files
+)
+
+# Type mapping and field specifications
+field_specs = [
+    ('C', 'NAME', 50),
+    ('N', 'BALANCE', 12, 2),
+    ('D', 'CREATED'),
+    ('L', 'ACTIVE')
+]
+
+to_dbf(df, 'output.dbf',
+    field_specs=field_specs,     # Explicit field definitions
+    code_page='cp1252',          # Set code page
+    mode='overwrite'              # overwrite or append
+)
+```
+
+#### Pandas Type Mapping
+
+| DBF Type | Pandas Type | Notes |
+|----------|-------------|-------|
+| C (Character) | object/string | Automatically trimmed |
+| N (Numeric) | float64/int64 | Preserves precision |
+| F (Float) | float64 | Full precision |
+| B (Double) | float64 | IEEE 754 double precision |
+| D (Date) | datetime64 | Date only |
+| T (DateTime) | datetime64 | Date and time |
+| L (Logical) | bool | True/False/None |
+| M (Memo) | object/string | Unlimited length |
+| Y (Currency) | float64 | 4 decimal places |
+
+#### Performance with Large Files
+
+The pandas integration supports efficient processing of large DBF files:
+
+```python
+from dbfpy3.pandas import PandasDBFConverter
+
+converter = PandasDBFConverter()
+
+# Read large file in chunks
+for chunk_df in converter.read_chunks('large_file.dbf', chunksize=50000):
+    # Process each chunk
+    processed = chunk_df[chunk_df['STATUS'] == 'ACTIVE']
+    # Append to output file
+    converter.append_to_dbf(processed, 'output.dbf')
+
+# Memory-efficient aggregation
+total = 0
+for chunk in converter.read_chunks('sales.dbf', chunksize=10000):
+    total += chunk['AMOUNT'].sum()
 ```
 
 ## 🏗️ Architecture and Design

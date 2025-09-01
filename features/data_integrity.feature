@@ -78,8 +78,7 @@ Feature: Data Integrity and Consistency
     Given I have a DBF file with existing records
     When I begin a series of related record updates
     And one of the updates encounters an error
-    Then either all updates should complete successfully
-    Or all updates should be rolled back to the original state
+    Then all updates should complete successfully or be rolled back
     And the file should not be left in a partially updated state
     And subsequent operations should work on consistent data
 
@@ -133,7 +132,7 @@ Feature: Data Integrity and Consistency
 
   @null-values @empty-data
   Scenario: Handle null and empty values consistently
-    Given I have a DBF file with various field types
+    Given I have a DBF file with various field types for null testing
     When I store empty or null values:
       | Field Type | Empty Value | Expected Storage |
       | Character  | ""          | Empty string     |

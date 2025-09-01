@@ -503,7 +503,10 @@ def cleanup_error_test_files(context):
     # Clean up all temporary files
     temp_file_attrs = [
         'corrupted_file_path', 'truncated_file_path', 'readonly_file_path',
-        'validation_test_file', 'numeric_test_file', 'index_test_file'
+        'validation_test_file', 'numeric_test_file', 'index_test_file',
+        'boundary_test_file', 'field_access_test_file', 'concurrent_test_file',
+        'encoding_test_file', 'unsupported_format_file', 'unknown_field_file',
+        'partial_corrupt_file', 'cascading_test_file', 'cleanup_test_file'
     ]
     
     for attr in temp_file_attrs:
@@ -514,3 +517,12 @@ def cleanup_error_test_files(context):
                     os.remove(file_path)
                 except:
                     pass
+
+
+# Import additional step definitions for comprehensive error handling coverage
+# Note: Commented out as the extended file doesn't exist yet
+# try:
+#     from error_handling_extended import *
+# except ImportError:
+#     # Extended steps are optional - main scenarios can still run without them
+#     pass

@@ -94,7 +94,7 @@ Feature: DBF File Operations
 
   @edge-case
   Scenario: Handle empty field values gracefully
-    Given I have a DBF file with various field types
+    Given I have a DBF file with various field types for empty value testing
     When I create a record with some empty values:
       | Field      | Value |
       | NAME       |       |
